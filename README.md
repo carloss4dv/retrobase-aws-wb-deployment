@@ -45,7 +45,7 @@ Este despliegue se realizará sobre la VPC predeterminada de la cuenta, lo cual 
 ## Stage 1: Configuración de EC2 Backend Windows
 
 1. Accede a la consola de EC2, selecciona “Lanzar instancia” y elige la AMI de Windows.
-2. Selecciona el tipo de instancia `t3.small`, dado que tipos de instancia menores exceden el límite de tiempo de solicitud máximo de 29 segundos.
+2. Selecciona el tipo de instancia `t3.small`, dado que tipos de instancia menores exceden el límite de tiempo de solicitud máximo de 29 segundos fijados por la API Gateway.
 3. Nombra la instancia como `DosBoxBackend` y selecciona un par de claves (o crea uno nuevo si no tienes).
 4. Selecciona la VPC por defecto, permite que cree un grupo de seguridad, y lanza la instancia.
 5. Una vez que la instancia esté en estado `Running` con `Check Status 2/2 Check Initialized Success`, anota el ID del grupo de seguridad para modificarlo más tarde.
