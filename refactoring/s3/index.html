@@ -1,52 +1,64 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="Buscador de videojuegos">
+    <meta name="author" content="Tu Nombre">
     <title>Buscador de videojuegos</title>
-    <link rel="stylesheet" href="styles.css">
+    <!-- Bootstrap core CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+    <!-- JS Stuff -->
+    <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js" integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js" integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/fetch/2.0.1/fetch.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/tether/1.4.0/js/tether.min.js" integrity="sha384-DztdAPBWPRXSA/3eYEEUWrWCy7G5KFbe8fFjk5JAIxUYHKkDx6Qin1DkWx51bBrb" crossorigin="anonymous"></script>
+    <!-- Custom styles -->
+    <link href="styles.css" rel="stylesheet">
 </head>
 <body>
-    <header>
-        <h1>Buscador de videojuegos</h1>
-        <p>Número de registros: <span id="numReg">0</span></p>
-    </header>
-    
-    <div class="search-container">
-        <label for="name">Búsqueda por nombre</label>
-        <input type="text" id="name" placeholder="Introduzca el nombre">
-        <button onclick="searchByName()">Buscar</button>
+    <div class="container">
+        <header class="text-center my-4">
+            <h1>Buscador de videojuegos</h1>
+            <p>Número de registros: <span id="numReg">0</span></p>
+        </header>
+        
+        <div class="search-container mb-3">
+            <label for="name">Búsqueda por nombre</label>
+            <input type="text" id="name" class="form-control" placeholder="Introduzca el nombre">
+            <button class="btn btn-primary mt-2" onclick="searchByName()">Buscar</button>
+        </div>
+
+        <div class="search-container mb-3"> 
+            <label for="tape">Búsqueda por cinta</label>
+            <input type="text" id="tape" class="form-control" placeholder="Introduzca la cinta">
+            <button class="btn btn-primary mt-2" onclick="searchByTape()">Buscar</button>
+        </div>
+
+        <div id="errorMessage" class="alert alert-danger" style="display: none;"></div> <!-- Muestra errores aquí -->
+
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th>Número</th>
+                    <th>Nombre</th>
+                    <th>Tipo</th>
+                    <th>Cinta</th>
+                </tr>
+            </thead>
+            <tbody id="resultsBody">
+                <!-- Los resultados se insertarán aquí -->
+            </tbody>
+        </table>
     </div>
 
-    <div class="search-container"> 
-        <label for="tape">Búsqueda por cinta</label>
-        <input type="text" id="tape" placeholder="Introduzca la cinta">
-        <button onclick="searchByTape()">Buscar</button>
-    </div>
-
-    <div id="errorMessage"></div> <!-- Muestra errores aquí -->
-
-    <table>
-        <thead>
-            <tr>
-                <th>Número</th>
-                <th>Nombre</th>
-                <th>Tipo</th>
-                <th>Cinta</th>
-            </tr>
-        </thead>
-        <tbody id="resultsBody">
-            <!-- Los resultados se insertarán aquí -->
-        </tbody>
-    </table>    
-
-    <script src="scripts.js"></script>
+    <script src="script.js"></script>
     <script>
-        // Llama a fetchAllPrograms cuando la página se carga
+        // Llama a getAllPrograms cuando la página se carga
         window.onload = function() {
-            fetchAllPrograms(); // Llama a la función que obtiene todos los programas
+            getAllPrograms(); // Llama a la función que obtiene todos los programas
         };
     </script>
 </body>
 </html>
-

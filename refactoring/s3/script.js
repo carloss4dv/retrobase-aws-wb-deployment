@@ -1,28 +1,4 @@
-const API_BASE_URL = "https://<API_GATEWAY_ID>.execute-api.<region>.amazonaws.com/prod"; // Cambia API_GATEWAY_ID y region
-
-async function fetchAllPrograms() {
-    const errorMessage = document.getElementById("errorMessage");
-    errorMessage.textContent = ""; // Limpiar mensaje de error
-    try {
-        const response = await fetch(API_BASE_URL + '/get-all-programs', {
-            method: "GET",
-            headers: { "Content-Type": "application/json" },
-        });
-
-        if (response.status === 404) {
-            errorMessage.textContent = "No se encontró ningún dato en el servidor.";
-            return;
-        } else if (!response.ok) {
-            throw new Error(`Error: ${response.statusText}`);
-        }
-
-        const data = await response.json();
-        displayResults(data);
-    } catch (error) {
-        errorMessage.textContent = `Error al conectar con el servidor: ${error.message}`;
-        console.error("Error:", error);
-    }
-}
+const API_BASE_URL = "https://iudjdh18y8.execute-api.us-east-1.amazonaws.com/prod"; // Cambia API_GATEWAY_ID y region
 
 async function searchByName() {
     const name = document.getElementById("name").value.trim();
@@ -32,7 +8,13 @@ async function searchByName() {
         errorMessage.textContent = "Por favor, introduzca un nombre para buscar.";
         return;
     }
-    await fetchData('/name', {program_name: name });
+    await fetchData(API_BASE_URL + '/name', { name: name }, "POST");
+}
+
+async function getAllPrograms() {
+    const errorMessage = document.getElementById("errorMessage");
+    errorMessage.textContent = ""; // Limpiar mensaje de error
+    await fetchData(API_BASE_URL + '/get-all-programs', {}, "GET");
 }
 
 async function searchByTape() {
@@ -43,18 +25,32 @@ async function searchByTape() {
         errorMessage.textContent = "Por favor, introduzca una cinta para buscar.";
         return;
     }
-    await fetchData('/tape', {tape_name: tape });
+    
+    // Crear la URL con el parámetro de consulta
+    // Hacer la solicitud GET
+    await fetchData(API_BASE_URL+'/tape',{tape: tape}, "POST"); // No se necesita cuerpo en GET
 }
 
-async function fetchData(endpoint, bodyData) {
+async function fetchData(endpoint, bodyData, type) {
     const errorMessage = document.getElementById("errorMessage");
     errorMessage.textContent = ""; // Limpiar mensaje de error
+
+    const fetchOptions = {
+        method: type,
+        headers: { 
+            "Content-Type": "application/json",
+        },
+    };
+
+    // Solo añadir el cuerpo si es una solicitud POST
+    if (type === "POST") {
+        fetchOptions.body = JSON.stringify(bodyData);
+    }
+
+    console.log("Enviando petición a:", endpoint, "con datos:", fetchOptions);
+
     try {
-        const response = await fetch(API_BASE_URL + endpoint, {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify(bodyData),
-        });
+        const response = await fetch(endpoint, fetchOptions);
 
         if (response.status === 404) {
             errorMessage.textContent = "No se encontró ningún dato en el servidor.";
@@ -99,4 +95,3 @@ function displayResults(data) {
         errorMessage.textContent = "No se encontraron resultados para la búsqueda.";
     }
 }
-
