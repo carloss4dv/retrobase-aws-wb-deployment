@@ -71,7 +71,8 @@ Este despliegue se realizará sobre la VPC predeterminada de la cuenta, lo cual 
 
 1. Dirígete a CloudFormation, selecciona “Crear pila” y carga `lambda/lambda.yaml`.
 2. Cambia la IP en el parámetro por la IP pública de tu instancia EC2 y crea la pila.
-3. Una vez creada, verifica que las funciones Lambda y el rol de ejecución se hayan generado correctamente.
+3. Cambia el arn de la Capa por el arn de tu capa, si no lo has apuntado ya vuelve a la consola de Lambda y apuntalo.
+4. Una vez creada, verifica que las funciones Lambda y el rol de ejecución se hayan generado correctamente.
 
 ---
 
