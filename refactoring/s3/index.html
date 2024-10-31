@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Buscador de videojuegos</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <header>
+        <h1>Buscador de videojuegos</h1>
+        <p>Número de registros: <span id="numReg">0</span></p>
+    </header>
+    
+    <div class="search-container">
+        <label for="name">Búsqueda por nombre</label>
+        <input type="text" id="name" placeholder="Introduzca el nombre">
+        <button onclick="searchByName()">Buscar</button>
+    </div>
+
+    <div class="search-container"> 
+        <label for="tape">Búsqueda por cinta</label>
+        <input type="text" id="tape" placeholder="Introduzca la cinta">
+        <button onclick="searchByTape()">Buscar</button>
+    </div>
+
+    <div id="errorMessage"></div> <!-- Muestra errores aquí -->
+
+    <table>
+        <thead>
+            <tr>
+                <th>Número</th>
+                <th>Nombre</th>
+                <th>Tipo</th>
+                <th>Cinta</th>
+            </tr>
+        </thead>
+        <tbody id="resultsBody">
+            <!-- Los resultados se insertarán aquí -->
+        </tbody>
+    </table>    
+
+    <script src="scripts.js"></script>
+    <script>
+        // Llama a fetchAllPrograms cuando la página se carga
+        window.onload = function() {
+            fetchAllPrograms(); // Llama a la función que obtiene todos los programas
+        };
+    </script>
+</body>
+</html>
+

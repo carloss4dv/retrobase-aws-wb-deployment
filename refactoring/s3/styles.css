@@ -1,0 +1,96 @@
+/* Estilo retro */
+body {
+    font-family: 'Courier New', Courier, monospace;
+    padding: 20px;
+    background-color: #000000;
+    color: #00FF00;
+    text-align: center;
+}
+
+h1 {
+    color: #FF00FF;
+    font-size: 60px;
+    text-transform: uppercase;
+    text-shadow: 3px 3px #00FF00;
+    border: 4px solid #FF00FF;
+    padding: 20px;
+    display: inline-block;
+    background-color: #000;
+    margin-bottom: 40px;
+}
+
+.search-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.search-container label {
+    font-size: 24px;
+    color: #FFFF00;
+    margin-bottom: 5px;
+    text-shadow: 2px 2px #FF00FF;
+}
+
+.search-container input {
+    padding: 15px;
+    font-size: 24px;
+    width: 60%;
+    margin: 10px 0;
+    border: 3px dashed #FF00FF;
+    background-color: #000;
+    color: #00FF00;
+    text-align: center;
+}
+
+table {
+    width: 90%;
+    margin: 30px auto;
+    border-collapse: collapse;
+    background-color: #000;
+    color: #00FF00;
+    font-size: 20px;
+    border: 3px solid #FFFF00;
+}
+
+th, td {
+    padding: 15px;
+    border: 2px dotted #FF00FF;
+}
+
+th {
+    background-color: #FF00FF;
+    color: #000;
+    text-shadow: 1px 1px #00FF00;
+}
+
+td {
+    background-color: #000;
+    color: #00FF00;
+}
+
+button {
+    padding: 15px 40px;
+    background-color: #00FF00;
+    border: 4px solid #FF00FF;
+    cursor: pointer;
+    font-size: 22px;
+    color: #000;
+    text-transform: uppercase;
+    font-family: 'Courier New', Courier, monospace;
+    text-shadow: 2px 2px #FF00FF;
+}
+
+button:hover {
+    background-color: #FF00FF;
+    color: #00FF00;
+}
+
+#errorMessage {
+    color: #FF0000;
+    font-size: 20px;
+    margin-top: 20px;
+    font-weight: bold;
+}
+

@@ -1,0 +1,199 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Description: "Plantilla para desplegar funciones Lambda con capas"
+
+Parameters:
+  ApiEndpoint:
+    Type: String
+    Default: "http://54.152.63.201:5000"
+    Description: "El endpoint del servidor de Windows."
+
+  LambdaLayer:
+    Type: String
+    Default: "arn:aws:lambda:us-east-1:339712720764:layer:requestsLayer:1"
+    Description: "ARN de la capa de bibliotecas comunes."
+
+Resources:
+  LambdaExecutionRole:
+    Type: 'AWS::IAM::Role'
+    Properties:
+      AssumeRolePolicyDocument:
+        Version: '2012-10-17'
+        Statement:
+          - Effect: Allow
+            Principal:
+              Service: lambda.amazonaws.com
+            Action: sts:AssumeRole
+      Policies:
+        - PolicyName: LambdaExecutionPolicy
+          PolicyDocument:
+            Version: '2012-10-17'
+            Statement:
+              - Effect: Allow
+                Action:
+                  - logs:CreateLogGroup
+                  - logs:CreateLogStream
+                  - logs:PutLogEvents
+                Resource: arn:aws:logs:*:*:*
+
+  GetAllProgramsFunction:
+    Type: 'AWS::Lambda::Function'
+    Properties:
+      Handler: index.get_all_programs
+      Role: !GetAtt LambdaExecutionRole.Arn
+      Code:
+        ZipFile: |
+          import json
+          import os
+          import requests
+
+          API_URL = os.environ['API_URL']  # Leer el endpoint de las variables de entorno
+
+          def get_all_programs(event, context):
+              try:
+                  response = requests.get(f"{API_URL}/get-all-programs")
+                  data = {
+                      "numReg": 0,
+                      "found": "N",
+                      "data": []
+                  }
+                  if response.status_code == 200:
+                      json_data = response.json().get("programs", [])
+                      data["data"] = [
+                          {
+                              "Number": item["Number"],
+                              "Name": item["Name"],
+                              "Type": item["Type"],
+                              "Tape": item["Tape"]
+                          } for item in json_data
+                      ]
+                      data["numReg"] = len(data["data"])
+                      data["found"] = "Y" if data["data"] else "N"
+              except Exception as e:
+                  print(f"Error al conectar con la API: {e}")
+
+              return {
+                  'statusCode': 200,
+                   'headers': {
+                   'Access-Control-Allow-Origin': '*',  # Permitir todos los orígenes
+                   'Access-Control-Allow-Headers': 'Content-Type',
+                   'Access-Control-Allow-Methods': 'OPTIONS, POST, GET'
+              },
+                   'body': json.dumps(data)
+              }
+      Runtime: python3.11
+      MemorySize: 128
+      Timeout: 900
+      Environment:  # Definir las variables de entorno
+        Variables:  # Aquí se especifica la sección correcta para variables de entorno
+          API_URL: !Ref ApiEndpoint
+      Layers:
+        - !Ref LambdaLayer
+
+  NamePostFunction:
+    Type: 'AWS::Lambda::Function'
+    Properties:
+      Handler: index.name_post
+      Role: !GetAtt LambdaExecutionRole.Arn
+      Code:
+        ZipFile: |
+          import json
+          import os
+          import requests
+
+          API_URL = os.environ['API_URL']  # Leer el endpoint de las variables de entorno
+
+          def name_post(event, context):
+              program_name = json.loads(event['body']).get('name', '').upper()
+              try:
+                  response = requests.post(f"{API_URL}/specfic-program-data", json={"program_name": program_name})
+                  data = {
+                      "numReg": 0,
+                      "found": "N",
+                      "data": []
+                  }
+                  if response.status_code == 200:
+                      program = response.json().get("result", [])
+                      if len(program) > 0:
+                          data["found"] = "Y"
+                          data["data"] = program
+              except Exception as e:
+                  print(f"Error al conectar con la API: {e}")
+              return {
+                  'statusCode': 200,
+                  'body': json.dumps(data)
+              }
+
+      Runtime: python3.11  # Cambiado a python3.11 para ser consistente
+      MemorySize: 128
+      Timeout: 900
+      Environment:  # Definir las variables de entorno
+        Variables:  # Aquí se especifica la sección correcta para variables de entorno
+          API_URL: !Ref ApiEndpoint
+      Layers:
+        - !Ref LambdaLayer  # Usando el ARN proporcionado como parámetro
+
+  TapePostFunction:
+    Type: 'AWS::Lambda::Function'
+    Properties:
+      Handler: index.tape_post
+      Role: !GetAtt LambdaExecutionRole.Arn
+      Code:
+        ZipFile: |
+          import json
+          import os
+          import requests
+
+          API_URL = os.environ['API_URL']  # Leer el endpoint de las variables de entorno
+
+          def tape_post(event, context):
+              tape_name = json.loads(event['body']).get('tape', '').upper()
+              try:
+                  response = requests.post(f"{API_URL}/tape", json={"tape_name": tape_name})
+                  data = {
+                      "numReg": len(programs_in_tape),
+                      "found": "Y" if programs_in_tape else "N",
+                      "data": programs_in_tape
+                  }
+                  if response.status_code == 200:
+                     program = response.json().get("result", [])
+                     if len(program) > 0:
+                         data["found"] = "Y"
+                         data["data"] = program
+              except Exception as e:
+                  print(f"Error en tape_post: {e}")
+                  data = {
+                      "numReg": 0,
+                      "found": "N",
+                      "data": []
+                  }
+              
+              return {
+                  'statusCode': 200,
+                   'headers': {
+                   'Access-Control-Allow-Origin': '*',  # Permitir todos los orígenes
+                   'Access-Control-Allow-Headers': 'Content-Type',
+                   'Access-Control-Allow-Methods': 'OPTIONS, POST, GET'
+              },
+                   'body': json.dumps(data)
+              }
+      Runtime: python3.11  # Cambiado a python3.11 para ser consistente
+      MemorySize: 128
+      Timeout: 900
+      Environment:  # Definir las variables de entorno
+        Variables:  # Aquí se especifica la sección correcta para variables de entorno
+          API_URL: !Ref ApiEndpoint
+      Layers:
+        - !Ref LambdaLayer  # Usando el ARN proporcionado como parámetro
+
+Outputs:
+  GetAllProgramsFunctionArn:
+    Description: "ARN de la función Lambda para obtener todos los programas"
+    Value: !GetAtt GetAllProgramsFunction.Arn
+
+  NamePostFunctionArn:
+    Description: "ARN de la función Lambda para obtener un programa específico"
+    Value: !GetAtt NamePostFunction.Arn
+
+  TapePostFunctionArn:
+    Description: "ARN de la función Lambda para obtener un programa específico"
+    Value: !GetAtt TapePostFunction.Arn

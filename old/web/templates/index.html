@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Buscador de videojuegos</title>
+    <style>
+        body {
+            font-family: 'Courier New', Courier, monospace; /* Fuente monoespaciada retro */
+            padding: 20px;
+            background-color: #000000; /* Fondo negro absoluto */
+            color: #00FF00; /* Texto verde neón estilo retro */
+            text-align: center;
+        }
+        h1 {
+            color: #FF00FF; /* Título en fucsia */
+            font-size: 60px; /* Grande y llamativo */
+            text-transform: uppercase; /* Título en mayúsculas */
+            text-shadow: 3px 3px #00FF00; /* Sombra de texto verde neón */
+            border: 4px solid #FF00FF; /* Bordes gruesos retro */
+            padding: 20px;
+            display: inline-block;
+            background-color: #000; /* Fondo negro */
+            margin-bottom: 40px;
+        }
+        .search-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+        .search-container label {
+            font-size: 24px; /* Texto grande */
+            color: #FFFF00; /* Amarillo brillante retro */
+            margin-bottom: 5px;
+            text-shadow: 2px 2px #FF00FF; /* Sombra de texto fucsia */
+        }
+        .search-container input {
+            padding: 15px;
+            font-size: 24px; /* Más grande para un estilo retro */
+            width: 60%; /* Más ancho */
+            margin: 10px 0; /* Espaciado entre los inputs */
+            border: 3px dashed #FF00FF; /* Borde discontinuo retro */
+            background-color: #000; /* Fondo negro */
+            color: #00FF00; /* Texto verde neón */
+            text-align: center;
+        }
+        table {
+            width: 90%;
+            margin: 30px auto;
+            border-collapse: collapse;
+            background-color: #000;
+            color: #00FF00;
+            font-size: 20px;
+            border: 3px solid #FFFF00; /* Borde amarillo retro */
+        }
+        th, td {
+            padding: 15px;
+            border: 2px dotted #FF00FF; /* Bordes punteados retro */
+        }
+        th {
+            background-color: #FF00FF; /* Fondo fucsia */
+            color: #000; /* Texto negro */
+            text-shadow: 1px 1px #00FF00; /* Sombra de texto verde */
+        }
+        td {
+            background-color: #000;
+            color: #00FF00; /* Texto verde neón */
+        }
+        button {
+            padding: 15px 40px;
+            background-color: #00FF00;
+            border: 4px solid #FF00FF;
+            cursor: pointer;
+            font-size: 22px;
+            color: #000;
+            text-transform: uppercase;
+            font-family: 'Courier New', Courier, monospace;
+            text-shadow: 2px 2px #FF00FF;
+        }
+        button:hover {
+            background-color: #FF00FF;
+            color: #00FF00;
+        }
+        /* Cursor retro personalizado */
+        body, input, button {
+            cursor: url('https://www.rw-designer.com/cursor-view/41839.png'), auto; /* Puntero retro */
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>Buscador de videojuegos</h1>
+        <p>Número de registros: {{ data.numReg }}</p>
+    </header>
+    
+
+    <form action="/name" method="POST" onsubmit="return validateName()">
+        <div class="search-container">
+            <label for="name">Búsqueda por nombre</label>
+            <input type="text" id="name" name="name" placeholder="Introduzca el nombre">
+            <button id="searchName" type="submit">Buscar</button>
+        </div>
+    </form>
+
+    <form action="/tape" method="POST" onsubmit="return validateTape()">
+        <div class="search-container"> 
+            <label for="tape">Búsqueda por cinta</label>
+            <input type="text" id="tape" name="tape" placeholder="Introduzca la cinta">
+            <button id="searchTape" type="submit">Buscar</button>
+        </div>
+    </form>
+    {% if data.found=="NO" %}
+        <p class="error">Programa/s no encontrado</p>
+    {% endif %}
+    <table>
+        <thead>
+            <tr>
+                <th>Número</th>
+                <th>Nombre</th>
+                <th>Tipo</th>
+                <th>Cinta</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for item in data.data %}
+                <tr>
+                    <td>{{ item.Number }}</td>
+                    <td>{{ item.Name }}</td>
+                    <td>{{ item.Type }}</td>
+                    <td>{{ item.Tape }}</td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>    
+
+    <script>
+        function validateName() {
+            if (document.getElementById("name").value.trim() === "") {
+                alert("El campo no puede estar vacío.");
+                return false;
+            }
+            return true;
+        }
+
+        function validateTape() {
+            if (document.getElementById("tape").value.trim() === "") {
+                alert("El campo no puede estar vacío.");
+                return false;
+            }
+            return true;
+        }
+    </script>
+</body>
+</html>

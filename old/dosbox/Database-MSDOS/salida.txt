@@ -1,0 +1,2 @@
+
+C:\Users\villa\Documents\Unizar\Sistemas_legados\Practica_3\Database-MSDOS>DOSBox-0.74\DOSBox.exe Database\gwbasic.bat -noconsole 
